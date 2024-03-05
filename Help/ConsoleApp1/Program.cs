@@ -58,7 +58,8 @@ namespace SkeletonProgramCS
 
         private static string GetTransmission()
         {
-            List<string> AllFileNames = new List<string>(); 
+            //Finding all the text files in the directory
+            List<string> AllFileNames = new List<string>();
 
             DirectoryInfo d = new DirectoryInfo(@"C:\Users\ananmal.CRGS.000\Documents\Visual Studio 2022\Help\ConsoleApp1\bin\Debug\net7.0"); //Assuming Test is your Folder
 
@@ -70,36 +71,60 @@ namespace SkeletonProgramCS
             foreach (FileInfo file in Files)
             {
                 FileNumber++;
-                Console.WriteLine("{0} -- {1}",FileNumber,str = file.Name);
+                Console.WriteLine("{0} -- {1}", FileNumber, str = file.Name); // Print each file
                 AllFileNames.Add(str);
             }
 
-            
+
             string FileName = EMPTYSTRING;
-            Console.Write("\nEnter file name: ");
+            Console.Write("\nEnter file name OR the index of the file: ");
 
             FileName = Console.ReadLine();
 
 
-
-            string Transmission;
             try
             {
-                Transmission = File.ReadAllText(FileName);
-                Transmission = StripLeadingSpaces(Transmission);
-                if (Transmission.Length > 0)
+                int FileNum = Convert.ToInt32(FileName) - 1;
+                string Transmission;
+                try
                 {
-                    Transmission = StripTrailingSpaces(Transmission);
-                    Transmission = Transmission + EOL;
+                    Transmission = File.ReadAllText(AllFileNames[FileNum]);
+                    Transmission = StripLeadingSpaces(Transmission);
+                    if (Transmission.Length > 0)
+                    {
+                        Transmission = StripTrailingSpaces(Transmission);
+                        Transmission = Transmission + EOL;
+                    }
                 }
+                catch
+                {
+                    ReportError("No transmission found");
+                    Transmission = EMPTYSTRING;
+                }
+                return Transmission;
             }
             catch
             {
-                ReportError("No transmission found");
-                Transmission = EMPTYSTRING;
+                string Transmission;
+                try
+                {
+                    Transmission = File.ReadAllText(FileName);
+                    Transmission = StripLeadingSpaces(Transmission);
+                    if (Transmission.Length > 0)
+                    {
+                        Transmission = StripTrailingSpaces(Transmission);
+                        Transmission = Transmission + EOL;
+                    }
+                }
+                catch
+                {
+                    ReportError("No transmission found");
+                    Transmission = EMPTYSTRING;
+                }
+                return Transmission;
             }
-            return Transmission;
-        }
+        }        
+            
 
         private static char GetNextSymbol(ref int i, string Transmission)
         {
@@ -244,7 +269,8 @@ namespace SkeletonProgramCS
 
         private static void DisplayMenu()
         {
-            Console.WriteLine();
+
+            Console.WriteLine("\n\n=========");
             Console.WriteLine("Main Menu");
             Console.WriteLine("=========");
             Console.WriteLine("R - Receive Morse code");
