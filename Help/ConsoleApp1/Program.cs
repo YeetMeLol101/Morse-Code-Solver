@@ -1,4 +1,4 @@
-﻿// Skeleton for the AQA A1 Summer 2018 examination
+// Skeleton for the AQA A1 Summer 2018 examination
 // this code should be used in conjunction with the Preliminary Material
 // written by the AQA AS Programmer Team
 // developed in Visual Studio 2015
@@ -7,6 +7,7 @@
 
 using System;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 
 namespace SkeletonProgramCS
 {
@@ -58,71 +59,126 @@ namespace SkeletonProgramCS
 
         private static string GetTransmission()
         {
-            //Finding all the text files in the directory
-            List<string> AllFileNames = new List<string>();
-
-            DirectoryInfo d = new DirectoryInfo(@"C:\Users\ananmal.CRGS.000\Documents\Visual Studio 2022\Help\ConsoleApp1\bin\Debug\net7.0"); //Assuming Test is your Folder
-
-            FileInfo[] Files = d.GetFiles("*.txt"); //Getting Text files
-            string str = "";
-
-            int FileNumber = 0;
-            Console.WriteLine("\nAvailable messages: \n");
-            foreach (FileInfo file in Files)
+            bool Valid = false;
+            string Entry;
+            while (Valid == false)
             {
-                FileNumber++;
-                Console.WriteLine("{0} -- {1}", FileNumber, str = file.Name); // Print each file
-                AllFileNames.Add(str);
-            }
-
-
-            string FileName = EMPTYSTRING;
-            Console.Write("\nEnter file name OR the index of the file: ");
-
-            FileName = Console.ReadLine();
-
-
-            try
-            {
-                int FileNum = Convert.ToInt32(FileName) - 1;
-                string Transmission;
-                try
+                Console.WriteLine("Load a file?");
+                Entry = Console.ReadLine().ToUpper();
+                if (Entry == "Y")
                 {
-                    Transmission = File.ReadAllText(AllFileNames[FileNum]);
-                    Transmission = StripLeadingSpaces(Transmission);
-                    if (Transmission.Length > 0)
+                    Valid = true;
+                    //Finding all the text files in the directory
+                    List<string> AllFileNames = new List<string>();
+
+                    DirectoryInfo d = new DirectoryInfo(@"C:\Users\ananmal.CRGS.000\Documents\Visual Studio 2022\Help\ConsoleApp1\bin\Debug\net7.0"); //Assuming Test is your Folder
+
+                    FileInfo[] Files = d.GetFiles("*.txt"); //Getting Text files
+                    string str = "";
+
+                    int FileNumber = 0;
+                    Console.WriteLine("\nAvailable messages: \n");
+                    foreach (FileInfo file in Files)
                     {
-                        Transmission = StripTrailingSpaces(Transmission);
-                        Transmission = Transmission + EOL;
+                        FileNumber++;
+                        Console.WriteLine("{0} -- {1}", FileNumber, str = file.Name); // Print each file
+                        AllFileNames.Add(str);
+                    }
+
+
+                    string FileName = EMPTYSTRING;
+                    Console.Write("\nEnter file name OR the index of the file: ");
+
+                    FileName = Console.ReadLine();
+
+
+                    try
+                    {
+                        int FileNum = Convert.ToInt32(FileName) - 1;
+                        string Transmission;
+                        try
+                        {
+                            Transmission = File.ReadAllText(AllFileNames[FileNum]);
+                        }
+                        catch
+                        {
+                            ReportError("No transmission found");
+                            Transmission = EMPTYSTRING;
+                        }
+
+
+                        Transmission = StripLeadingSpaces(Transmission);
+                        if (Transmission.Length > 0)
+                        {
+                            Transmission = StripTrailingSpaces(Transmission);
+                            Transmission = Transmission + EOL;
+                        }
+                        return Transmission;
+                    }
+                    catch
+                    {
+                        string Transmission;
+                        try
+                        {
+                            try
+                            {
+                                Transmission = File.ReadAllText(FileName + ".txt");
+                            }
+                            catch
+                            {
+                                Transmission = File.ReadAllText(FileName);
+
+                            }
+
+                        }
+                        catch
+                        {
+                            ReportError("No transmission found");
+                            Transmission = EMPTYSTRING;
+                        }
+
+
+                        Transmission = StripLeadingSpaces(Transmission);
+                        if (Transmission.Length > 0)
+                        {
+                            Transmission = StripTrailingSpaces(Transmission);
+                            Transmission = Transmission + EOL;
+                        }
+                        return Transmission;
                     }
                 }
-                catch
+                else if (Entry == "N")
                 {
-                    ReportError("No transmission found");
-                    Transmission = EMPTYSTRING;
-                }
-                return Transmission;
-            }
-            catch
-            {
-                string Transmission;
-                try
-                {
-                    Transmission = File.ReadAllText(FileName);
-                    Transmission = StripLeadingSpaces(Transmission);
-                    if (Transmission.Length > 0)
+                    Valid = true;
+                    Console.WriteLine("Enter your message:");
+                    string Transmission;
+                    Transmission = Console.ReadLine();
+                    try
                     {
-                        Transmission = StripTrailingSpaces(Transmission);
-                        Transmission = Transmission + EOL;
+
+                        if (Transmission.Length > 0)
+                        {
+                            Transmission = StripTrailingSpaces(Transmission);
+                            Transmission = Transmission + EOL;
+                        }
+                        return Transmission;
+                    }
+                    catch
+                    {
+                        ReportError("No transmission found");
+                        Transmission = EMPTYSTRING;
                     }
                 }
-                catch
+                else
                 {
-                    ReportError("No transmission found");
-                    Transmission = EMPTYSTRING;
+                    Console.WriteLine("Invalid Transmission Signal");
+                    Valid = false;
                 }
-                return Transmission;
             }
+            
+
+            return EMPTYSTRING;
+            
         }        
             
 
