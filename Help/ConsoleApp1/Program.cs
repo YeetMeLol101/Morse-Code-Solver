@@ -63,7 +63,7 @@ namespace SkeletonProgramCS
             string Entry;
             while (Valid == false)
             {
-                Console.WriteLine("Load a file?");
+                Console.WriteLine("Load a file? (Y)es or (N)o");
                 Entry = Console.ReadLine().ToUpper();
                 if (Entry == "Y")
                 {
@@ -71,7 +71,7 @@ namespace SkeletonProgramCS
                     //Finding all the text files in the directory
                     List<string> AllFileNames = new List<string>();
 
-                    DirectoryInfo d = new DirectoryInfo(@"C:\Users\ananmal.CRGS.000\Documents\Visual Studio 2022\Help\ConsoleApp1\bin\Debug\net7.0"); //Assuming Test is your Folder
+                    DirectoryInfo d = new DirectoryInfo(@"C:\Users\Anan Mallick\Downloads\Morse-Code-Solver-main\Morse-Code-Solver-main\Help\ConsoleApp1\bin\Debug\net7.0"); //Assuming Test is your Folder
 
                     FileInfo[] Files = d.GetFiles("*.txt"); //Getting Text files
                     string str = "";
@@ -306,22 +306,32 @@ namespace SkeletonProgramCS
             string MorseCodeString = EMPTYSTRING;
             char PlainTextLetter = SPACE;
             int Index = 0;
-            for (int i = 0; i < PlainTextLength; i++)
+            try
             {
-                PlainTextLetter = PlainText[i];
-                if (PlainTextLetter == SPACE)
+                for (int i = 0; i < PlainTextLength; i++)
                 {
-                    Index = 0;
+                    PlainTextLetter = PlainText[i];
+                    if (PlainTextLetter == SPACE)
+                    {
+                        Index = 0;
+                    }
+                    else
+                    {
+
+                        Index = (int)PlainTextLetter - (int)'A' + 1;
+
+                    }
+                    string CodedLetter = MorseCode[Index];
+                    MorseCodeString = MorseCodeString + CodedLetter + SPACE;
                 }
-                else
-                {
-                    Index = (int)PlainTextLetter - (int)'A' + 1;
-                }
-                string CodedLetter = MorseCode[Index];
-                MorseCodeString = MorseCodeString + CodedLetter + SPACE;
+                Console.WriteLine(MorseCodeString);
             }
-            Console.WriteLine(MorseCodeString);
+            catch
+            {
+                Console.WriteLine("-- Invalid Characters! --(uppercase letters and spaces only)");
+            }
         }
+            
 
         private static void DisplayMenu()
         {
