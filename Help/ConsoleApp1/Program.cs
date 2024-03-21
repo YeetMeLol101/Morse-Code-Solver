@@ -175,12 +175,12 @@ namespace SkeletonProgramCS
                     Valid = false;
                 }
             }
-            
+
 
             return EMPTYSTRING;
-            
-        }        
-            
+
+        }
+
 
         private static char GetNextSymbol(ref int i, string Transmission)
         {
@@ -323,6 +323,14 @@ namespace SkeletonProgramCS
             Console.WriteLine(MorseCodeString);
         }
 
+        private static void ConvertMorseCode(string[] Letter)
+        {
+            Console.Write("Enter your message (dots (.) and dashes (-) only");
+            string MorseText = Console.ReadLine();
+            int MorseTextLength = MorseText.Length;
+
+        }
+
         private static void DisplayMenu()
         {
 
@@ -365,6 +373,10 @@ namespace SkeletonProgramCS
                 else if (MenuOption == "S")
                 {
                     SendMorseCode(MorseCode);
+                }
+                else if (MenuOption == "C")
+                {
+                    ConvertMorseCode(Letter)
                 }
                 else if (MenuOption == "X")
                 {
